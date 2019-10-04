@@ -26,12 +26,15 @@ def student_list(filename):
 
 def get_assignments(students):
     group_counter = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+    names = []
     for filename in os.listdir('submissions/'):
         file_matched = False
         for username, real_name, group in students:
             if username in filename.lower():
                 file_matched = True
-                group_counter[int(group)] += 1
+                if username not in names:
+                    group_counter[int(group)] += 1
+                    names.append(username)
         if not file_matched:
             print("Incorrect submission: {}".format(filename))
     return group_counter
