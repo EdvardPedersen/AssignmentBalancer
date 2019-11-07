@@ -1,15 +1,8 @@
 import argparse
 import csv
 import os
-
-def assign_tas():
-    groups = {}
-    groups[1] = "Alexander Torkelsen"
-    groups[2] = "Ingeborg Frøystein"
-    groups[3] = "Harald Lykke Joakimsen"
-    groups[4] = "Joakim Aalstad Alslie"
-    groups[5] = "Tonje Reinholdt Haugen"
-    return groups
+from groupreader import read_groups
+from args import read_arguments
 
 def student_list(filename):
     results = []
@@ -41,11 +34,8 @@ def get_assignments(students):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-l", "--student_list", type=str, required=True)
-    conf = parser.parse_args()
-
-    groups = assign_tas()
+    conf = read_arguments()
+    groups = read_groups(conf.ta_list)
     students = student_list(conf.student_list)
     good_assignments = get_assignments(students)
     for group, number in good_assignments.items():
