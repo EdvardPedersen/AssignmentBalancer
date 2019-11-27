@@ -35,7 +35,10 @@ def get_assignment_status(row):
             number = row[name].split(',')[0]
             if number == "":
                 continue
-            assignment_scores[num] += int(number)
+            try:
+                assignment_scores[num] += int(number)
+            except:
+                pass
     return assignment_scores
 
 if __name__ == "__main__":
@@ -43,6 +46,7 @@ if __name__ == "__main__":
     groups = read_groups(conf.ta_list)
     students = student_list(conf.student_list)
 
+    total_started = 0
     total_ass_1 = 0
     total_ass_2 = 0
     total_ass_3 = 0
@@ -51,21 +55,24 @@ if __name__ == "__main__":
     for group in groups:
         print("##### Group {} - {} #####".format(group, groups[group]))
         for student in [x for x in students if x[2] == group]:
-            output = "{:40s}".format(student[1])
+            output = ""
+            if student[3]['1'] > 0:
+                total_started += 1
             if student[3]['1'] >= 30:
+                output = "{:40s}".format(student[1])
                 output = output + " - 1 OK"
                 total_ass_1 += 1
             if student[3]['2'] >= 30:
+                output = output + " - 2 OK"
                 total_ass_2 += 1
             if student[3]['3'] >= 30:
+                output = output + "- 3 OK"
                 total_ass_3 += 1
             sum_last_assignments = min(student[3]['2'],30) + min(student[3]['3'], 30)
-            if sum_last_assignments >= 50:
-                output = output + " - 2&3 OK"
-                total_finished += 1
-            print(output)
+            if output:
+                print(output)
+    print("Number who started first assignment: {}".format(total_started))
     print("Number who finished assignment 1: {}".format(total_ass_1))
     print("Number who finished assignment 2: {}".format(total_ass_2))
     print("Number who finished assignment 3: {}".format(total_ass_3))
-    print("Number who finished all assignments: {}".format(total_finished))
 
